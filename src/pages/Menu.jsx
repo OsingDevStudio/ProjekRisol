@@ -1,191 +1,129 @@
-import { useState } from "react";
-
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-
-import {
-  FaWhatsapp,
-  FaPlus,
-  FaMinus,
-  FaStar,
-} from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; 
+import Navbar from "../components/Navbar"; 
+import Footer from "../components/Footer"; 
+import { FaPlus, FaMinus, FaStar, FaShoppingBasket } from "react-icons/fa";
 
 const menuData = [
-  {
-    id: 1,
-    name: "Risol Anggur",
-    price: 15000,
-    image: "/images/anggur.png",
-    rating: 4.9,
-    desc: "Perpaduan rasa manis dan creamy yang unik.",
-  },
-  {
-    id: 2,
-    name: "Risol Ayam Suir",
-    price: 18000,
-    image: "/images/ayam suir.png",
-    rating: 4.8,
-    desc: "Isian ayam suir melimpah dengan rasa gurih premium.",
-  },
-  {
-    id: 3,
-    name: "Risol Coklat Tiramisu",
-    price: 17000,
-    image: "/images/coklat tiramisu.png",
-    rating: 4.9,
-    desc: "Coklat creamy dengan sentuhan tiramisu lembut.",
-  },
+  { id: 1, name: "Risol Anggur", price: 15000, image: "/images/anggur.png", rating: 4.9, desc: "Manis dan creamy." },
+  { id: 2, name: "Risol Ayam Suir", price: 18000, image: "/images/ayam suir.png", rating: 4.8, desc: "Gurih ayam premium." },
+  { id: 3, name: "Risol Coklat Tiramisu", price: 17000, image: "/images/coklat tiramisu.png", rating: 4.9, desc: "Coklat lumer tiramisu." },
+  { id: 4, name: "Risol Keju", price: 18000, image: "/images/keju.png", rating: 4.9, desc: "Keju lumer melimpah." },
+  { id: 5, name: "Risol Matcha", price: 20000, image: "/images/matcha.jpg", rating: 4.9, desc: "Matcha autentik nagih." },
+  { id: 6, name: "Risol Strawberry", price: 20000, image: "/images/strawbery.png", rating: 5.0, desc: "Stroberi segar manis." },
 ];
 
 const Menu = () => {
-  const [qty, setQty] = useState({});
+  const navigate = useNavigate(); 
+  const [cart, setCart] = useState({});
+  const [tempQty, setTempQty] = useState({});
 
-  const increaseQty = (id) => {
-    setQty((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 1) + 1,
-    }));
+  const handleTempQty = (id, delta) => {
+    setTempQty((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] || 0) + delta) }));
   };
 
-  const decreaseQty = (id) => {
-    setQty((prev) => ({
-      ...prev,
-      [id]: Math.max((prev[id] || 1) - 1, 1),
-    }));
+  const addToCart = (item) => {
+    const qty = tempQty[item.id] || 0;
+    if (qty > 0) {
+      setCart((prev) => ({ ...prev, [item.id]: (prev[item.id] || 0) + qty }));
+      setTempQty((prev) => ({ ...prev, [item.id]: 0 }));
+    }
   };
 
-  const getQty = (id) => qty[id] || 1;
+  const totalItems = Object.values(cart).reduce((acc, curr) => acc + curr, 0);
+  const totalPrice = menuData.reduce((acc, item) => acc + (item.price * (cart[item.id] || 0)), 0);
 
-  const orderWhatsApp = (item) => {
-    const quantity = getQty(item.id);
-
-    const message = `Halo Risol Aril 👋
-
-Saya ingin memesan:
-
-📌 ${item.name}
-📦 Jumlah: ${quantity}
-💰 Total: Rp ${(item.price * quantity).toLocaleString("id-ID")}
-
-Terima kasih 🙌`;
-
-    const phone = "6281234567890";
-
-    window.open(
-      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-      "_blank"
-    );
+  const handleGoToCheckout = () => {
+    const cartItems = menuData
+      .filter(item => cart[item.id] > 0)
+      .map(item => ({ ...item, qty: cart[item.id] }));
+    navigate("/checkout", { state: { cartItems, totalPrice } });
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#FDFDFD] relative overflow-x-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
+           style={{ backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '30px 30px' }}>
+      </div>
+
       <Navbar />
 
-      {/* Header */}
-      <section className="relative overflow-hidden pt-24 pb-10 px-6 bg-white">
-        {/* Pattern Grid */}
-        <div className="absolute inset-0 opacity-[0.04] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:44px_44px]"></div>
-
-        {/* Blur Accent */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-red-100 rounded-full blur-3xl opacity-40"></div>
-
-        <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-            Menu Premium
+      <main className="relative z-10 pt-28 pb-40">
+        <section className="pb-8 text-center">
+          <h1 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter">
+            Menu <span className="text-red-500">Premium</span>
           </h1>
+          <p className="text-gray-400 font-bold mt-1 uppercase tracking-widest text-[10px]">Risol Kualitas Terbaik</p>
+        </section>
 
-          <p className="mt-4 text-gray-500 text-base max-w-xl mx-auto leading-relaxed">
-            Pilihan risol premium dengan rasa unik dan isian melimpah.
-          </p>
-        </div>
-      </section>
-
-      {/* Menu Grid */}
-      <section className="px-6 pb-20 bg-white">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* Grid disesuaikan: 4 kolom di layar besar (lg:grid-cols-4) */}
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {menuData.map((item) => (
-            <div
-              key={item.id}
-              className="group bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 max-w-[320px] mx-auto"
-            >
-              {/* Image */}
-              <div className="relative overflow-hidden h-[210px]">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-
-                {/* Rating */}
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2 shadow-lg">
-                  <FaStar className="text-yellow-400 text-sm" />
-
-                  <span className="font-bold text-sm">
-                    {item.rating}
-                  </span>
+            <div key={item.id} className="group bg-white rounded-[30px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 p-3">
+              {/* Ukuran Image diperkecil */}
+              <div className="relative h-44 rounded-[22px] overflow-hidden mb-4">
+                <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                  <FaStar className="text-yellow-400 text-[10px]" />
+                  <span className="font-black text-[10px] text-gray-800">{item.rating}</span>
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="p-4">
-                <h3 className="text-lg font-extrabold text-gray-900 mb-2">
-                  {item.name}
-                </h3>
-
-                <p className="text-gray-500 leading-relaxed mb-4 text-sm">
-                  {item.desc}
-                </p>
-
-                <div className="flex items-center justify-between mb-5">
-                  {/* Price */}
-                  <div>
-                    <p className="text-xs text-gray-400 mb-1">
-                      Harga
-                    </p>
-
-                    <h2 className="text-xl font-extrabold text-red-500">
-                      Rp {item.price.toLocaleString("id-ID")}
-                    </h2>
-                  </div>
-
-                  {/* Quantity */}
-                  <div className="flex items-center gap-2 bg-gray-100 px-2 py-2 rounded-xl">
-                    <button
-                      onClick={() => decreaseQty(item.id)}
-                      className="w-8 h-8 rounded-lg bg-white shadow flex items-center justify-center hover:bg-red-500 hover:text-white transition"
-                    >
-                      <FaMinus size={10} />
-                    </button>
-
-                    <span className="font-bold text-base min-w-[20px] text-center">
-                      {getQty(item.id)}
-                    </span>
-
-                    <button
-                      onClick={() => increaseQty(item.id)}
-                      className="w-8 h-8 rounded-lg bg-white shadow flex items-center justify-center hover:bg-red-500 hover:text-white transition"
-                    >
-                      <FaPlus size={10} />
-                    </button>
-                  </div>
+              <div className="text-center px-1">
+                <h3 className="text-md font-black text-gray-900 uppercase tracking-tight leading-tight">{item.name}</h3>
+                <p className="text-gray-400 text-[11px] my-2 leading-relaxed h-8 line-clamp-2 font-medium">{item.desc}</p>
+                <h2 className="text-lg font-black text-red-500 mb-4">Rp {item.price.toLocaleString("id-ID")}</h2>
+                
+                {/* Selector Qty lebih mungil */}
+                <div className="flex items-center justify-center gap-4 mb-4 bg-gray-50/80 p-1.5 rounded-xl border border-gray-100">
+                  <button onClick={() => handleTempQty(item.id, -1)} className="w-8 h-8 bg-white rounded-lg shadow-sm flex items-center justify-center text-gray-400 hover:bg-red-500 hover:text-white transition-all font-bold text-sm">-</button>
+                  <span className="font-black text-md text-gray-800 min-w-[20px]">{tempQty[item.id] || 0}</span>
+                  <button onClick={() => handleTempQty(item.id, 1)} className="w-8 h-8 bg-white rounded-lg shadow-sm flex items-center justify-center text-gray-400 hover:bg-green-500 hover:text-white transition-all font-bold text-sm">+</button>
                 </div>
 
-                {/* Button */}
-                <button
-                  onClick={() => orderWhatsApp(item)}
-                  className="w-full bg-black hover:bg-red-500 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300"
+                <button 
+                  onClick={() => addToCart(item)}
+                  disabled={!tempQty[item.id]}
+                  className={`w-full py-2.5 rounded-xl font-black text-[11px] tracking-wider transition-all duration-300 ${
+                    tempQty[item.id] > 0 
+                    ? "bg-gray-900 text-white hover:bg-red-600" 
+                    : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                  }`}
                 >
-                  <FaWhatsapp size={18} />
-                  Pesan Sekarang
+                  TAMBAH
                 </button>
               </div>
             </div>
           ))}
         </div>
-      </section>
+      </main>
+
+      {/* Floating Bar tetap sama agar mudah ditekan */}
+      {totalItems > 0 && (
+        <div className="fixed bottom-8 left-0 right-0 z-[100] flex justify-center px-4">
+          <div className="bg-gray-900/95 backdrop-blur-2xl text-white p-2 pl-6 rounded-[28px] shadow-2xl flex items-center gap-6 border border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="bg-red-500 p-2.5 rounded-xl">
+                <FaShoppingBasket size={18} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] text-gray-400 font-black uppercase">Total</span>
+                <span className="text-lg font-black text-white">Rp {totalPrice.toLocaleString("id-ID")}</span>
+              </div>
+            </div>
+            <button 
+              onClick={handleGoToCheckout} 
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-3.5 rounded-[20px] font-black text-xs transition-all"
+            >
+              ORDER SEKARANG
+            </button>
+          </div>
+        </div>
+      )}
 
       <Footer />
-    </>
+    </div>
   );
 };
 
