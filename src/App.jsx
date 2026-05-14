@@ -1,22 +1,17 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Checkout from "./pages/Checkout";
-import Home from "./pages/Home";
+import Kontak from "./pages/Kontak"; // 1. Import Halaman Kontak
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Mengarahkan halaman awal ke Home */}
-        <Route path="/" element={<Home />} /> 
-        
-        {/* Gunakan huruf kecil '/menu' agar konsisten dan aman di server */}
+        <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/checkout" element={<Checkout />} />
-        
-        {/* Proteksi jika halaman tidak ditemukan, arahkan ke menu */}
-        <Route path="*" element={<Navigate to="/menu" />} />
+        <Route path="/kontak" element={<Kontak />} /> {/* 2. Tambahkan Route Ini */}
       </Routes>
     </Router>
   );
