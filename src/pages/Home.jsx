@@ -1,3 +1,5 @@
+import React from "react";
+import { Link } from "react-router-dom"; // WAJIB DIIMPORT
 import Navbar from "../components/Navbar";
 
 const Home = () => {
@@ -13,7 +15,6 @@ const Home = () => {
             alt="Background Risol Aril"
             className="w-full h-full object-cover"
           />
-
           <div className="absolute inset-0 bg-black/50"></div>
         </div>
 
@@ -37,12 +38,13 @@ const Home = () => {
           </p>
 
           <div className="flex justify-center">
-            <a
-              href="/menu"
+            {/* GANTI <a> MENJADI <Link> DAN href MENJADI to */}
+            <Link
+              to="/menu"
               className="w-full sm:w-auto bg-red-500 hover:bg-red-600 px-8 md:px-12 py-3 md:py-4 rounded-full text-base md:text-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center gap-2"
             >
               Lihat Menu <span>→</span>
-            </a>
+            </Link>
           </div>
         </div>
       </section>

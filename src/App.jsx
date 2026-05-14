@@ -8,12 +8,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Mengarahkan halaman awal ke Home atau Menu */}
+        {/* Mengarahkan halaman awal ke Home */}
         <Route path="/" element={<Home />} /> 
-        <Route path="/Menu" element={<Menu />} />
+        
+        {/* Gunakan huruf kecil '/menu' agar konsisten dan aman di server */}
+        <Route path="/menu" element={<Menu />} />
         <Route path="/checkout" element={<Checkout />} />
-        {/* Proteksi jika halaman tidak ditemukan */}
-        <Route path="*" element={<Navigate to="/Menu" />} />
+        
+        {/* Proteksi jika halaman tidak ditemukan, arahkan ke menu */}
+        <Route path="*" element={<Navigate to="/menu" />} />
       </Routes>
     </Router>
   );
