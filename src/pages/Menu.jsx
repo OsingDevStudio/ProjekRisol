@@ -10,7 +10,7 @@ const menuData = [
   { id: 3, name: "Risol Coklat Tiramisu", price: 17000, image: "/images/coklat tiramisu.png", rating: 4.9, desc: "Coklat lumer tiramisu." },
   { id: 4, name: "Risol Keju", price: 18000, image: "/images/keju.png", rating: 4.9, desc: "Keju lumer melimpah." },
   { id: 5, name: "Risol Matcha", price: 20000, image: "/images/matcha.jpg", rating: 4.9, desc: "Matcha autentik nagih." },
-  { id: 6, name: "Risol Strawberry", price: 20000, image: "/images/strawbery.png", rating: 5.0, desc: "Stroberi segar manis." },
+  // { id: 6, name: "Risol Strawberry", price: 20000, image: "/images/strawbery.png", rating: 5.0, desc: "Stroberi segar manis." },
 ];
 
 const Menu = () => {

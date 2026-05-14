@@ -10,10 +10,10 @@ function App() {
       <Routes>
         {/* Mengarahkan halaman awal ke Home atau Menu */}
         <Route path="/" element={<Home />} /> 
-        <Route path="/menu" element={<Menu />} />
+        <Route path="/Menu" element={<Menu />} />
         <Route path="/checkout" element={<Checkout />} />
         {/* Proteksi jika halaman tidak ditemukan */}
-        <Route path="*" element={<Navigate to="/menu" />} />
+        <Route path="*" element={<Navigate to="/Menu" />} />
       </Routes>
     </Router>
   );
